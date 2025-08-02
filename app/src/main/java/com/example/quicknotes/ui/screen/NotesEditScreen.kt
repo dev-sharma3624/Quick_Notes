@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -59,7 +60,6 @@ fun NotesEditScreen() {
             .fillMaxSize()
             .background(bgColor, RoundedCornerShape(10))
             .border(1.dp, Color.Black, RoundedCornerShape(10))
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp)
     ){
 
         BasicTextField(
@@ -70,24 +70,27 @@ fun NotesEditScreen() {
                 fontWeight = FontWeight.Bold,
             ),
             modifier = Modifier.fillMaxWidth()
+                .padding(top = 48.dp, start = 16.dp, end = 16.dp)
         )
 
         Text(
             text = "02 Aug 2025 14:15",
             fontSize = 16.sp,
             color = Color(0f, 0f, 0f, 0.29f),
-            modifier = Modifier.padding(vertical = 32.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
         )
 
         BasicTextField(
             onValueChange = {},
-            value = "Lorem ipsum dolor sit amet, consectetur adipis  cing elit. Phasellus consequat suscipit risus, ut egestas erat pulvinar maximus. Suspendisse sapien est, vestibulum nec arcu eget, sollicitudin blandit mi. Nulla sed malesuada urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec non iaculis eros. Cras iaculis neque id augue maximus, eu dictum tortor pretium. Sed eget dui odio. Integer egestas nisl sed ornare commodo. Nulla ut interdum lacus. Praesent vel tincidunt velit, non tristique elit. Suspendisse auctor ante ut congue varius. Ut cursus porta interdum. Mauris ac est sit amet nisi sagittis suscipit. Maecenas at felis vitae massa venenatis efficitur sit amet vel massa.",
+            value = "Lorem ipsum dolor sit amet, consectetur adipis  cing elit. Phasellus consequat suscipit risus, ut egestas erat pulvinar maximus. Suspendisse sapien est, vestibulum nec arcu eget, sollicitudin blandit mi. Nulla sed malesuada urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec non iaculis eros. Cras iaculis neque id augue maximus, eu dictum tortor pretium. Sed eget dui odio. Integer egestas nisl sed ornare commodo. Nulla ut interdum lacus. Praesent vel tincidunt velit, non tristique elit. Suspendisse auctor ante ut congue varius. Ut cursus porta interdum. Mauris ac est sit amet nisi sagittis suscipit. Maecenas at felis vitae massa venenatis efficitur sit amet vel massa.Lorem ipsum dolor sit amet, consectetur adipis  cing elit. Phasellus consequat suscipit risus, ut egestas erat pulvinar maximus. Suspendisse sapien est, vestibulum nec arcu eget, sollicitudin blandit mi. Nulla sed malesuada urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec non iaculis eros. Cras iaculis neque id augue maximus, eu dictum tortor pretium. Sed eget dui odio. Integer egestas nisl sed ornare commodo. Nulla ut interdum lacus. Praesent vel tincidunt velit, non tristique elit. Suspendisse auctor ante ut congue varius. Ut cursus porta interdum. Mauris ac est sit amet nisi sagittis suscipit. Maecenas at felis vitae massa venenatis efficitur sit amet vel massa.",
             textStyle = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Light,
                 lineHeight = 26.sp
             ),
             modifier = Modifier.fillMaxWidth()
+                .clip(RoundedCornerShape(10))
+                .padding(start = 16.dp, end = 16.dp, top = 4.dp)
         )
 
 
