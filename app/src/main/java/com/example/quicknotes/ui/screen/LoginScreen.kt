@@ -41,13 +41,15 @@ fun LoginScreenPreview(){
                     contentScale = ContentScale.FillBounds
                 )
         ) {
-            LoginScreen()
+            LoginScreen({})
         }
     }
 }
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(
+    navigateToMainScreen: () -> Unit
+){
 
     val fontSize_TexFieldHeadings_buttonText = 24.sp
     val internalComponentsModifier = Modifier.padding(8.dp)
@@ -119,7 +121,7 @@ fun LoginScreen(){
             )
 
             Button(
-                onClick = {},
+                onClick = {navigateToMainScreen()},
                 modifier = internalComponentsModifier
                     .fillMaxWidth(),
                 shape = RectangleShape

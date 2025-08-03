@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -43,13 +45,15 @@ fun MainScreenPreview(){
                     contentScale = ContentScale.FillBounds
                 )
         ) {
-            MainScreen()
+            MainScreen({})
         }
     }
 }
 
 @Composable
-fun MainScreen(){
+fun MainScreen(
+    navigateToEditScreen : () -> Unit
+){
 
     Column(
         modifier = Modifier.padding(12.dp)
@@ -83,8 +87,8 @@ fun MainScreen(){
         ) {
             items(12){
 
-                ElevatedCard(
-                    onClick = {},
+                Card(
+                    onClick = {navigateToEditScreen()},
                     elevation = CardDefaults.cardElevation(0.dp),
                     colors = CardColors(
                         containerColor = Color.White,
