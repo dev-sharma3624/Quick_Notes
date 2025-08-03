@@ -53,8 +53,6 @@ class MainViewModel(
 
     val individualNote = mutableStateOf<Note?>(null)
 
-    private var firstEmission = true
-
     init {
         if(isSignedIn()){
             observeNotes()
@@ -66,11 +64,6 @@ class MainViewModel(
             repo.getNotes()
                 .collect { notesList ->
                     _notes.value = notesList
-                    if(firstEmission){
-                        notesList.forEach {
-                            dao.insert(it)
-                        }
-                    }
                 }
         }
     }
@@ -81,6 +74,11 @@ class MainViewModel(
                 repo.getNotes()
                     .collect { notesList ->
                         _notes.value = notesList
+                        if(!isSignedIn()){
+                            notesList.forEach {
+                                dao.insert(it)
+                            }
+                        }
                     }
             }catch (e : Exception){
                 Log.e("Exception", "${e.message}")

@@ -90,7 +90,13 @@ fun NavigationGraph() {
                     navController.navigate(Screen.EDIT.name)
                 },
                 navigateToEditScreen = { navController.navigate(Screen.EDIT.name) },
-                navigateToLoginScreen = { navController.popBackStack() }
+                navigateToLoginScreen = {
+                    if(startDestination == Screen.LOGIN.name){
+                        navController.popBackStack()
+                    }else{
+                        navController.navigate(Screen.LOGIN.name)
+                    }
+                }
             )
         }
 
