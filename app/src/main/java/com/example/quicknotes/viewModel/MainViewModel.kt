@@ -8,14 +8,24 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.quicknotes.R
-import com.example.quicknotes.repositories.FirebaseAuthRepository
+import com.example.quicknotes.data.data_classes.Note
+import com.example.quicknotes.data.db.NoteDao
+import com.example.quicknotes.repositories.FirebaseRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class AuthenticationVm(
-    private val repo: FirebaseAuthRepository
+class MainViewModel(
+    private val repo: FirebaseRepository,
+    private val dao : NoteDao
 ) : ViewModel() {
 
     private val _currentTab = mutableStateOf("Sign Up")
@@ -35,6 +45,73 @@ class AuthenticationVm(
 
     private val _errorMessage = mutableStateOf<String?>(null)
     val errorMessage : State<String?> = _errorMessage
+
+    private val _notes = MutableStateFlow<List<Note>?>(null)
+    val notes: StateFlow<List<Note>?> = _notes
+
+    private var _noteId : String? = null
+
+    val individualNote = mutableStateOf<Note?>(null)
+
+    private var firstEmission = true
+
+    init {
+        if(isSignedIn()){
+            observeNotes()
+        }
+    }
+
+    private fun observeNotes() {
+        viewModelScope.launch {
+            repo.getNotes()
+                .collect { notesList ->
+                    _notes.value = notesList
+                    if(firstEmission){
+                        notesList.forEach {
+                            dao.insert(it)
+                        }
+                    }
+                }
+        }
+    }
+
+    fun fetchNotes(){
+        viewModelScope.launch {
+            try {
+                repo.getNotes()
+                    .collect { notesList ->
+                        _notes.value = notesList
+                    }
+            }catch (e : Exception){
+                Log.e("Exception", "${e.message}")
+            }
+        }
+    }
+
+    fun getNoteById() {
+        viewModelScope.launch {
+            individualNote.value =  if(_noteId != null){
+                notes
+                    .map { list -> list?.find { it.id == _noteId } ?: Note() }
+                    .first()
+            }else{
+                Note()
+            }
+        }
+    }
+
+    fun setNoteId(s : String){
+        _noteId = s
+        getNoteById()
+    }
+
+    fun saveNote(){
+        viewModelScope.launch(Dispatchers.IO + NonCancellable) {
+            individualNote.value?.let {
+                individualNote.value = repo.saveNote(it)
+            }
+        }
+    }
 
     fun setEmailField(s : String){
         _emailField.value = s
@@ -128,6 +205,17 @@ class AuthenticationVm(
 
             }
         }
+    }
+
+    fun signOut(){
+        repo.signOut()
+        viewModelScope.launch(Dispatchers.IO + NonCancellable) {
+            dao.deleteAll()
+        }
+    }
+
+    fun getUserName() : String?{
+        return repo.currentUser()!!.displayName
     }
 
 }

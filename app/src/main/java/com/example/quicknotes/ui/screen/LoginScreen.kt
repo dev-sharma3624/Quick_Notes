@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -42,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.example.quicknotes.R
 import com.example.quicknotes.ui.theme.QuickNotesTheme
 import com.example.quicknotes.ui.theme.primaryColor
-import com.example.quicknotes.viewModel.AuthenticationVm
+import com.example.quicknotes.viewModel.MainViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Preview(showBackground = true)
@@ -64,7 +63,7 @@ fun LoginScreenPreview(){
 
 @Composable
 fun LoginScreen(
-    vm : AuthenticationVm = koinViewModel(),
+    vm : MainViewModel = koinViewModel(),
     navigateToMainScreen: () -> Unit
 ){
 
@@ -202,7 +201,7 @@ fun LoginScreen(
                 painter = painterResource(R.drawable.android_light_sq_ctn),
                 contentScale = ContentScale.FillBounds,
                 contentDescription = null,
-                modifier = Modifier
+                modifier = internalComponentsModifier
                     .fillMaxWidth()
                     .height(50.dp)
                     .clickable {

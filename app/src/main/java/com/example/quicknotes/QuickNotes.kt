@@ -1,9 +1,12 @@
 package com.example.quicknotes
 
 import android.app.Application
-import com.example.quicknotes.repositories.FirebaseAuthRepository
-import com.example.quicknotes.viewModel.AuthenticationVm
+import androidx.room.Room
+import com.example.quicknotes.data.db.AppDb
+import com.example.quicknotes.repositories.FirebaseRepository
+import com.example.quicknotes.viewModel.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
@@ -17,19 +20,35 @@ class QuickNotes : Application() {
 
         startKoin{
 
+
+            androidContext(this@QuickNotes)
+
             val firebaseModule = module {
                 single { FirebaseAuth.getInstance()}
-                single { FirebaseAuthRepository(get()) }
+                single { FirebaseFirestore.getInstance()}
+                single { FirebaseRepository(get(), get(), get()) }
             }
 
             val viewModel = module{
-                viewModel{AuthenticationVm(get())}
+                viewModel{MainViewModel(get(), get())}
             }
 
-            androidContext(this@QuickNotes)
+            val db = module {
+                single {
+                    Room.databaseBuilder(
+                        get(),
+                        AppDb::class.java,
+                        "App_Db"
+                    ).build()
+                }
+
+                single { get<AppDb>().noteDao() }
+            }
+
             modules(listOf(
                 firebaseModule,
-                viewModel
+                viewModel,
+                db
             ))
         }
     }
