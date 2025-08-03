@@ -39,6 +39,9 @@ import com.example.quicknotes.ui.screen.LoginScreen
 import com.example.quicknotes.ui.screen.MainScreen
 import com.example.quicknotes.ui.screen.NotesEditScreen
 import com.example.quicknotes.ui.theme.QuickNotesTheme
+import com.example.quicknotes.viewModel.AuthenticationVm
+import com.google.rpc.context.AttributeContext.Auth
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,12 +69,15 @@ class MainActivity : ComponentActivity() {
 fun NavigationGraph() {
 
     val navController = rememberNavController()
+    val authenticationVm : AuthenticationVm = koinViewModel()
 
-    NavHost(navController = navController, startDestination = Screen.LOGIN.name) {
+    val startDestination = if(authenticationVm.isSignedIn()) Screen.MAIN.name else Screen.LOGIN.name
+
+    NavHost(navController = navController, startDestination = startDestination) {
 
         composable(route = Screen.LOGIN.name){
             Column {
-                LoginScreen(){
+                LoginScreen(authenticationVm){
                     navController.navigate(Screen.MAIN.name)
                 }
             }
